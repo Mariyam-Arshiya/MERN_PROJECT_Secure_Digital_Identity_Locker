@@ -6,11 +6,15 @@ import {AuthContext} from "../context/AuthContext";
 
 function ProtectedRoute({children}){
 
-const {user}=useContext(AuthContext);
+const {user,booting}=useContext(AuthContext);
+
+if(booting)
+
+return <div className="page-state">Loading secure session...</div>;
 
 if(!user)
 
-return ;
+return <Navigate to="/login" replace/>;
 
 return children;
 

@@ -10,7 +10,7 @@ function Login(){
 
 const navigate=useNavigate();
 
-const {setUser}=useContext(AuthContext);
+const {setAuth}=useContext(AuthContext);
 
 const [data,setData]=useState({
 
@@ -24,6 +24,8 @@ const login=async(e)=>{
 
 e.preventDefault();
 
+try{
+
 const res=
 
 await API.post(
@@ -34,21 +36,35 @@ data
 
 );
 
-setUser(res.data);
+setAuth(res.data);
 
-alert("Login Successful");
+alert(res.data.suspicious ? "Login successful. New device or IP detected." : "Login Successful");
 
 navigate("/dashboard");
+
+}catch(error){
+
+alert(error.response?.data?.message || "Login failed");
+
+}
 
 };
 
 return(
-<>
-Login
+<div className="auth-shell">
+
+<form className="auth-card" onSubmit={login}>
+
+<span className="eyebrow">Secure Vault Access</span>
+
+<h1>Login</h1>
+
+<p>Use your account to open your encrypted digital identity locker.</p>
 
 <input
 
 placeholder="Email"
+value={data.email}
 
 onChange={(e)=>
 
@@ -69,6 +85,7 @@ email:e.target.value
 type="password"
 
 placeholder="Password"
+value={data.password}
 
 onChange={(e)=>
 
@@ -84,9 +101,11 @@ password:e.target.value
 
 />
 
-<button onClick={login}>Login</button>
+<button type="submit">Login</button>
 
-</>
+</form>
+
+</div>
 );
 
 }

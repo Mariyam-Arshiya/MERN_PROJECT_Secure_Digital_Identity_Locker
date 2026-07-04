@@ -22,10 +22,6 @@ password: ""
 
 useEffect(()=>{
 
-getUser();
-
-},[]);
-
 const getUser = async()=>{
 
 const res =
@@ -35,6 +31,10 @@ await API.get(`/users/${id}`);
 setUser(res.data);
 
 };
+
+getUser();
+
+},[id]);
 
 const update = async(e)=>{
 
@@ -94,7 +94,7 @@ email:e.target.value
 
 />
 
-Update
+<button onClick={update}>Update</button>
 
 </>
 );
