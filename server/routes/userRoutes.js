@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/User");
+const User = require("../models/user");
+const protect = require("../middleware/authMiddleware");
+
+router.use(protect);
 
 // CREATE USER
 router.post("/add", async (req, res) => {
@@ -16,8 +19,17 @@ router.post("/add", async (req, res) => {
 // GET ALL USERS  (THIS IS THE ONLY ONE YOU NEED)
 router.get("/", async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().select("-password -refreshTokenHash");
     res.json(users);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select("-password -refreshTokenHash");
+    res.json(user);
   } catch (err) {
     res.status(500).json(err);
   }
